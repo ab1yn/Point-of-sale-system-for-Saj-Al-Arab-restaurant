@@ -1,0 +1,59 @@
+{
+  "name": "saj-al-arab-pos",
+  "version": "1.0.0",
+  "main": "main.js",
+  "description": "Saj Al Arab POS System",
+  "author": "Saj Al Arab",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=@saj/backend\" \"npm run dev --workspace=@saj/frontend\"",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "db:migrate": "npm run db:migrate --workspace=@saj/backend",
+    "db:seed": "npm run db:seed --workspace=@saj/backend",
+    "start": "pm2 start npm --name \"saj-pos\" -- run dev && electron .",
+    "stop": "pm2 stop saj-pos && pm2 delete saj-pos",
+    "dist": "npm run build && electron-builder",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.sajalarab.pos",
+    "productName": "Saj Al Arab POS",
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "files": [
+      "main.js",
+      "package.json",
+      "apps/frontend/dist/**/*",
+      "apps/backend/dist/**/*",
+      "apps/backend/package.json",
+      "node_modules/**/*"
+    ],
+    "asar": true,
+    "directories": {
+      "output": "dist_out"
+    }
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1",
+    "eslint": "^8.56.0",
+    "pm2": "^5.3.1",
+    "prettier": "^3.1.1",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.3.3"
+  }
+}
