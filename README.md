@@ -1,103 +1,89 @@
-<<<<<<< HEAD
-# نظام صاج العرب POS (Saj Al-Arab Point of Sale)
+# نظام نقاط البيع - Saj Al Arab POS
 
-نظام نقاط بيع متكامل (Full-Stack) مصمم خصيصاً لمطعم "صاج العرب" في الأردن. يدعم اللغة العربية بالكامل (RTL) ويتميز بتصميم عصري وأداء عالي.
+مشروع سطح مكتب لنظام نقاط بيع مطعم "ساج العرب"، يتكوّن من واجهة أمامية (واجهة ويب/إلكترون) وخادم خلفي (API) ومكونات مساعدة للتغذية والتهيئة.
 
-## 🛠️ التقنيات المستخدمة (Tech Stack)
+## نظرة عامة
+- الواجهة الأمامية: تطبيق واجهة مستخدم للـ POS الموجود في `apps/frontend`.
+- الخادم الخلفي: API وعمليات قاعدة البيانات في `apps/backend`.
+- الحزم المشتركة والأنواع في `packages/types`.
 
-### Frontend (واجهة المستخدم)
-- **Framework:** React 18 + Vite (TypeScript)
-- **Styling:** TailwindCSS + Shadcn/UI (Arabic 'Cairo' Font)
-- **State:** Zustand (Cart & UI)
-- **API:** Axios + TanStack Query
-- **Routing:** React Router DOM
+## المميزات
+- إدارة المنتجات، الفئات والمعدّلات.
+- معالجة الطلبات والدفع.
+- تقارير وطباعة إيصالات (printing).
+- نظام مصادقة ومستخدمين.
 
-### Backend (الخادم وقاعدة البيانات)
-- **Runtime:** Node.js 20 LTS
-- **Framework:** Express (TypeScript)
-- **Database:** SQLite (better-sqlite3)
-- **Validation:** Zod
-- **Architecture:** Services/Controllers Pattern
+## بنية المشروع
+- الجذر: ملفات البناء والحزم العامة.
+- `apps/backend`: مصدر الخادم الخلفي، المهاجرات، والـ services.
+- `apps/frontend`: مصدر الواجهة الأمامية (Vite + React/TSX).
+- `packages/types`: تعريفات وأنواع مشتركة.
 
-### Shared
-- **Monorepo:** npm workspaces
-- **Types:** Shared Zod schemas (packages/types)
+## المتطلبات
+- Node.js (موصى به: 16+ أو 18+)
+- npm أو yarn
 
----
+## تثبيت التشغيل (تطوير)
+1. تثبيت الحزم للجذر (إن وُجد workspace setup):
 
-## 🚀 تعليمات التثبيت (Installation)
-
-# Prerequisites: Node.js 20 LTS, npm 10+, Git
-
-# 1. Clone or navigate to project
-cd POS_1
-
-# 2. Install all dependencies
+```
 npm install
+```
 
-# 3. Setup environment variables
-# Copy .env.example to .env in both apps
-copy apps\frontend\.env.example apps\frontend\.env
-copy apps\backend\.env.example apps\backend\.env
+2. تثبيت وتشغيل الخادم الخلفي:
 
-# 4. Initialize database (Run Migrations & Seed)
-cd apps\backend
-npm run db:migrate
-npm run db:seed
-cd ..\..
-
-# 5. Run development mode (Start both Frontend & Backend)
+```
+cd apps/backend
+npm install
 npm run dev
-# Frontend: http://localhost:5173
-# Backend: http://localhost:3001
+```
 
-## 🖨️ إعدادات الطباعة (Printing Setup)
-النظام يستخدم بروتوكول `window.print()` ولا يحتاج لبرامج تعريف معقدة.
-1. تأكد من توصيل طابعة الإيصالات الحرارية (80mm).
-2. اجعلها الطابعة الافتراضية في إعدادات Windows.
-3. عند أول طباعة، تأكد من إلغاء خيار "Headers and Footers" في نافذة الطباعة بالمتصفح، وضبط الهوامش "Margins" على "None" أو "Minimum".
+3. تثبيت وتشغيل الواجهة الأمامية:
 
----
+```
+cd apps/frontend
+npm install
+npm run dev
+```
 
-## 📂 هيكلية المشروع (Project Structure)
+ملاحظة: الأوامر السابقة تفترض وجود سكربتات `dev` مُعرّفة في `package.json` لكل من `apps/backend` و`apps/frontend`.
 
-project-root/
-├── package.json          # Root workspace config
-├── tsconfig.json         # Shared TS config
-├── apps/
-│   ├── frontend/         # React Application
-│   │   ├── src/
-│   │   │   ├── components/
-│   │   │   │   ├── layout/    # MainLayout
-│   │   │   │   ├── pos/       # OrderPanel, ProductGrid...
-│   │   │   │   └── ui/        # Shadcn components
-│   │   │   ├── store/         # Zustand stores
-│   │   │   └── lib/           # Hooks, Utils
-│   └── backend/          # Express API
-│       ├── src/
-│       │   ├── controllers/
-│       │   ├── services/
-│       │   ├── routes/
-│       │   ├── database/    # Migrations & Seeds
-│       │   └── middleware/
-└── packages/
-    └── types/            # Shared Types & Zod Schemas
+## قاعدة البيانات والهجرات
+ملفات الهجرات والبيانات البدئية موجودة في `apps/backend/database` (مثل `migrate.ts` و`seed.ts`).
+بعد بناء المشروع أو باستخدام إعداد TypeScript المناسب، يمكنك تشغيل الهجرات والـ seed عبر السكربتات أو مباشرة باستخدام node على الملفات المترجمة في `dist`:
 
----
+```
+# مثال (بعد البناء):
+node ./dist/database/migrate.js
+node ./dist/database/seed.js
+```
 
-## ✅ المميزات المكتملة (Completed Features)
-- [x] واجهة عربية بالكامل مع خط "كايرو".
-- [x] نظام الطلبات (سفري، توصيل، محلي).
-- [x] إدارة السلة (إضافة، تعديل، حذف، ملاحظات).
-- [x] الإضافات (Modifiers) ونظام التسعير الديناميكي.
-- [x] الدفع (كاش، بطاقة) مع حساب الباقي.
-- [x] طباعة تذكرة المطبخ (بدون أسعار).
-- [x] طباعة فاتورة العميل (مع الأسعار بالدينار الأردني).
-- [x] قاعدة بيانات SQLite سريعة.
+إذا أردت تعليمات تشغيل محدّدة لقاعدة بيانات معينة (Postgres/SQLite)، سأضيفها عند تزويدي بتفاصيل الاتصال.
 
----
-**Developer:** Antigravity (Via Google DeepMind)
-=======
-# POS-system-for-Saj-Al-Arab-restaurant
-Full stack POS web application for Saj Al Arab restaurant in Jordan. Arabic first RTL UI. React 18 Vite frontend Node.js Express backend SQLite database. Supports dine in takeaway delivery payments and receipt and kitchen printing.
->>>>>>> 89d80ca4a9b4363c7a0a5a2478606d8c3556d93a
+## البناء (Production)
+
+```
+# بناء الخادم
+cd apps/backend
+npm run build
+
+# بناء الواجهة
+cd ../frontend
+npm run build
+
+# تجميع/حزم التطبيق (إن وُجد سكربت package أو بناء Electron)
+npm run package
+```
+
+## تشغيل حزم/توزيع (اختياري)
+ملفات التوزيع التجريبية موجودة تحت `dist_out/win-unpacked` في هذا المستودع.
+
+## المساهمة
+- افتح issue لوصف المشكلة أو الاقتراح.
+- أرسل Pull Request مع وصف للتغييرات وكيفية اختباره.
+
+## الاتصال
+- للملاحظات أو الأسئلة، اشترك issue أو أضف تعليق في PR.
+
+## الترخيص
+- أضف هنا معلومات الترخيص إن رغبت (مثلاً MIT).
